@@ -1,0 +1,6 @@
+*.swp
+.DS_Store
+/envoy-trial
+
+.git/
+README.md

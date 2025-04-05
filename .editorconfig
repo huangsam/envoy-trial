@@ -1,0 +1,11 @@
+[*]
+indent_size = 4
+
+[*.{cpp,hpp,yml,yaml}]
+indent_size = 2
+
+[CMakeLists.txt]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
