@@ -1,7 +1,7 @@
 services:
-  envoy:
+  et-envoy:
     image: envoyproxy/envoy:v1.33-latest
-    container_name: hs-envoy # envoy hostname
+    container_name: et-envoy # envoy hostname
     ports:
       - "9901:9901/tcp" # admin interface
       - "10161:10161/udp" # udp listener
@@ -9,13 +9,12 @@ services:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     networks:
       - app-network
-  go-udp:
+  et-udp:
+    image: huangsam/et-udp:dev
+    container_name: et-udp # go hostname
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hs-go-udp # go hostname
-    depends_on:
-      - envoy
     networks:
       - app-network
 
