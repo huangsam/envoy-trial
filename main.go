@@ -13,11 +13,12 @@ import (
 )
 
 const (
-	shutdownWait = 5 * time.Second        // for forceful termination
-	sendTimeout  = 1 * time.Second        // send duration
-	sendInterval = 100 * time.Millisecond // send frequency
-	handlerCount = 10                     // worker count
-	handlerSize  = 4 * 1024               // worker buffer
+	addr          = "0.0.0.0:161"   // envoy will forward traffic here
+	forcefulWait  = 5 * time.Second // for forceful shutdown
+	handlerCount  = 10              // worker count
+	handlerSize   = 4 * 1024        // worker buffer
+	sendDuration  = 1 * time.Second
+	sendFrequency = 100 * time.Millisecond
 )
 
 type workerIdKey struct{}
@@ -29,13 +30,10 @@ func (id workerId) String() string {
 }
 
 func main() {
-	addr := "0.0.0.0:161" // envoy will forward to this port
 	conn := setupConnection(addr)
-
 	slog.Info("UDP server listening", "address", addr)
-
-	var wg sync.WaitGroup
 	ctx, cancel := context.WithCancel(context.Background())
+	var wg sync.WaitGroup
 	for i := range handlerCount { // start handlers
 		wg.Add(1)
 		go func(id int) {
@@ -50,14 +48,14 @@ func main() {
 	<-quit
 	closeConnection(conn)
 	cancel() // stop handlers
-	slog.Info("Initiate shutdown", "threshold", shutdownWait)
+	slog.Info("Initiate shutdown", "threshold", forcefulWait)
 	done := make(chan struct{})
 	go func() {
 		defer close(done)
 		wg.Wait()
 	}()
 	select {
-	case <-time.After(shutdownWait):
+	case <-time.After(forcefulWait):
 		slog.Warn("Shutdown forcefully")
 	case <-done:
 		slog.Info("Shutdown gracefully")
@@ -112,9 +110,9 @@ func handleConnection(ctx context.Context, conn *net.UDPConn) {
 // sendPeriodicResponses sends periodic responses to the specified remote address for a limited time.
 func sendPeriodicResponses(ctx context.Context, conn *net.UDPConn, remoteAddr *net.UDPAddr) {
 	id := ctx.Value(workerIdKey{}).(workerId)
-	ticker := time.NewTicker(sendInterval)
+	ticker := time.NewTicker(sendFrequency)
 	defer ticker.Stop()
-	timeout := time.After(sendTimeout)
+	timeout := time.After(sendDuration)
 	for {
 		select {
 		case <-ctx.Done():
