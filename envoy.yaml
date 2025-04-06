@@ -2,7 +2,7 @@ admin:
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: 9901
+      port_value: 9901 # admin
 static_resources:
   listeners:
     - name: listener_0
@@ -10,7 +10,7 @@ static_resources:
         socket_address:
           protocol: UDP
           address: 0.0.0.0
-          port_value: 10161
+          port_value: 10161 # udp
       udp_listener_config:
         downstream_socket_config:
           max_rx_datagram_size: 9000
@@ -20,12 +20,12 @@ static_resources:
             "@type": type.googleapis.com/envoy.extensions.filters.udp.udp_proxy.v3.UdpProxyConfig
             stat_prefix: service
             matcher:
-              on_no_match:
+              on_no_match: # fallback approach
                 action:
                   name: route
                   typed_config:
                     "@type": type.googleapis.com/envoy.extensions.filters.udp.udp_proxy.v3.Route
-                    cluster: service_udp
+                    cluster: service_udp # target cluster
             upstream_socket_config:
               max_rx_datagram_size: 9000
   clusters:
@@ -39,5 +39,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: hs-go-udp
-                      port_value: 161
+                      address: hs-go-udp # docker dns
+                      port_value: 161 # go server
