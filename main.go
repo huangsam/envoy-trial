@@ -94,7 +94,7 @@ func handleConnection(ctx context.Context, conn *net.UDPConn) {
 	for {
 		n, remoteAddr, err := conn.ReadFromUDP(buffer)
 		if errors.Is(err, net.ErrClosed) {
-			slog.Info("Connection closed", "id", id)
+			slog.Info("Stop handler", "id", id)
 			return
 		}
 		if err != nil {
