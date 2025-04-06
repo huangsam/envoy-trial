@@ -8,7 +8,7 @@ services:
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     networks:
-      - app-network
+      - et-network
   et-udp:
     image: huangsam/et-udp:dev
     container_name: et-udp # go hostname
@@ -16,8 +16,8 @@ services:
       context: .
       dockerfile: Dockerfile
     networks:
-      - app-network
+      - et-network
 
 networks:
-  app-network: # shared network
+  et-network: # shared network
     driver: bridge
