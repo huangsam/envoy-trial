@@ -6,7 +6,9 @@ The first one is UDP connections over the UDP proxy.
 
 The Envoy proxy runs on external ports 9901 (for admin) and 10161 (for UDP). Whenever
 it receives UDP traffic, it forwards UDP traffic over to an internal port 161 for the
-associated Go listener. The listener is designed to process requests concurrently.
+UDP server written in Go. The server is designed to process requests concurrently.
+
+Feel free to inspect the [envoy config](./envoy.yaml) and [udp code](./main.go) for more details.
 
 ## Getting started
 
