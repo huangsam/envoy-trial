@@ -1,10 +1,10 @@
 services:
   envoy:
     image: envoyproxy/envoy:v1.33-latest
-    container_name: hs-envoy
+    container_name: hs-envoy # envoy hostname
     ports:
-      - "9901:9901/tcp" # Admin interface
-      - "10161:10161/udp" # Custom listener port
+      - "9901:9901/tcp" # admin interface
+      - "10161:10161/udp" # udp listener
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     networks:
@@ -13,12 +13,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hs-go-udp
+    container_name: hs-go-udp # go hostname
     depends_on:
       - envoy
     networks:
       - app-network
 
 networks:
-  app-network:
+  app-network: # shared network
     driver: bridge
