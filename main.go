@@ -57,7 +57,7 @@ func main() {
 		wg.Wait()
 	}()
 	select {
-	case <-time.After(shutdownWait): // forceful termination
+	case <-time.After(shutdownWait):
 		slog.Warn("Shutdown forcefully")
 	case <-done:
 		slog.Info("Shutdown gracefully")
@@ -92,7 +92,7 @@ func closeConnection(conn *net.UDPConn) {
 func handleConnection(ctx context.Context, conn *net.UDPConn) {
 	id := ctx.Value(workerIdKey{}).(workerId)
 	slog.Info("Start handler", "id", id)
-	buffer := make([]byte, handlerSize) // buffer to hold incoming UDP packets
+	buffer := make([]byte, handlerSize)
 	for {
 		n, remoteAddr, err := conn.ReadFromUDP(buffer)
 		if errors.Is(err, net.ErrClosed) {
