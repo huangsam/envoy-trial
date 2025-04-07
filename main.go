@@ -101,8 +101,7 @@ func handleConnection(ctx context.Context, conn *net.UDPConn) {
 			slog.Error("Error reading from UDP", "id", id, "error", err)
 			continue
 		}
-		message := buffer[:n]
-		slog.Info("Receive data", "id", id, "bytes", len(message), "remoteAddr", remoteAddr)
+		slog.Info("Receive data", "id", id, "bytes", n, "remoteAddr", remoteAddr)
 		sendPeriodicResponses(ctx, conn, remoteAddr)
 	}
 }
