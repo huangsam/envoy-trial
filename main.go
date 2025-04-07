@@ -13,12 +13,12 @@ import (
 )
 
 const (
-	addr          = "0.0.0.0:161"   // envoy will forward traffic here
-	forcefulWait  = 5 * time.Second // for forceful shutdown
-	handlerCount  = 10              // worker count
-	handlerSize   = 4 * 1024        // worker buffer
-	sendDuration  = 1 * time.Second
-	sendFrequency = 100 * time.Millisecond
+	addr         = "0.0.0.0:161"   // envoy will forward traffic here
+	forcefulWait = 5 * time.Second // for forceful shutdown
+	handlerCount = 10              // worker count
+	handlerSize  = 4 * 1024        // worker buffer
+	sendDuration = 1 * time.Second
+	sendInterval = 100 * time.Millisecond
 )
 
 type workerIdKey struct{}
@@ -109,7 +109,7 @@ func handleConnection(ctx context.Context, conn *net.UDPConn) {
 // sendPeriodicResponses sends periodic responses to the specified remote address for a limited time.
 func sendPeriodicResponses(ctx context.Context, conn *net.UDPConn, remoteAddr *net.UDPAddr) {
 	id := ctx.Value(workerIdKey{}).(workerId)
-	ticker := time.NewTicker(sendFrequency)
+	ticker := time.NewTicker(sendInterval)
 	defer ticker.Stop()
 	timeout := time.After(sendDuration)
 	for {
