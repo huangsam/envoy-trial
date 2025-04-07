@@ -12,9 +12,21 @@ services:
   et-udp:
     image: huangsam/et-udp:dev
     container_name: et-udp # go hostname
+    ports:
+      - "162:161/udp"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.proxy
+    networks:
+      - et-network
+  et-sim:
+    image: huangsam/et-sim:dev
+    container_name: et-sim # snmp simulator hostname
+    ports:
+      - "163:161/udp"
+    build:
+      context: .
+      dockerfile: Dockerfile.simulator
     networks:
       - et-network
 
