@@ -1,0 +1,14 @@
+FROM python:3.13-alpine
+
+WORKDIR /app
+COPY . /app
+
+RUN pip install snmpsim
+
+RUN addgroup -g 1001 nonroot && adduser -u 1001 -G nonroot -D nonroot
+
+USER nonroot
+
+EXPOSE 161/udp
+
+ENTRYPOINT [ "snmpsim-command-responder", "--data-dir=./data", "--agent-udpv4-endpoint=0.0.0.0:161" ]

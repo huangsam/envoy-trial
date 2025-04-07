@@ -7,6 +7,8 @@ services:
       - "10161:10161/udp" # udp listener
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - et-udp
     networks:
       - et-network
   et-udp:
@@ -14,7 +16,17 @@ services:
     container_name: et-udp # go hostname
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.proxy
+    depends_on:
+      - et-sim
+    networks:
+      - et-network
+  et-sim:
+    image: huangsam/et-sim:dev
+    container_name: et-sim # snmp simulator hostname
+    build:
+      context: .
+      dockerfile: Dockerfile.simulator
     networks:
       - et-network
 
