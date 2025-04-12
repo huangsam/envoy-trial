@@ -1,10 +1,10 @@
 services:
   et-envoy:
     image: envoyproxy/envoy:v1.33-latest
-    container_name: et-envoy # envoy hostname
+    container_name: et-envoy # envoy proxy hostname
     ports:
-      - "9901:9901/tcp" # admin interface
-      - "10161:10161/udp" # udp listener
+      - "9901:9901/tcp" # admin interface port
+      - "10161:10161/udp" # udp listener port
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     depends_on:
@@ -13,10 +13,10 @@ services:
       - et-network
   et-udp:
     image: huangsam/et-udp:dev
-    container_name: et-udp # go hostname
+    container_name: et-udp # udp proxy hostname
     build:
       context: .
-      dockerfile: Dockerfile.proxy
+      dockerfile: Dockerfile.proxy # golang
     depends_on:
       - et-sim
     networks:
@@ -26,7 +26,7 @@ services:
     container_name: et-sim # snmp simulator hostname
     build:
       context: .
-      dockerfile: Dockerfile.simulator
+      dockerfile: Dockerfile.simulator # python
     networks:
       - et-network
 
