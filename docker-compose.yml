@@ -1,35 +1,33 @@
+name: envoy-trial
 services:
-  et-envoy:
+  udp-gateway: # envoy service name
     image: envoyproxy/envoy:v1.33-latest
-    container_name: et-envoy # envoy proxy hostname
     ports:
       - "9901:9901/tcp" # admin interface port
       - "10161:10161/udp" # udp listener port
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     depends_on:
-      - et-udp
+      - udp-delegate
     networks:
-      - et-network
-  et-udp:
-    image: huangsam/et-udp:dev
-    container_name: et-udp # udp proxy hostname
+      - shared
+  udp-delegate: # udp service name
+    image: trial-udp-delegate:latest
     build:
       context: .
-      dockerfile: Dockerfile.proxy # golang
+      dockerfile: Dockerfile.delegate # golang
     depends_on:
-      - et-sim
+      - snmp-simulator
     networks:
-      - et-network
-  et-sim:
-    image: huangsam/et-sim:dev
-    container_name: et-sim # snmp simulator hostname
+      - shared
+  snmp-simulator: # simulator service name
+    image: trial-snmp-simulator:latest
     build:
       context: .
       dockerfile: Dockerfile.simulator # python
     networks:
-      - et-network
+      - shared
 
 networks:
-  et-network: # shared network
+  shared: # shared network
     driver: bridge

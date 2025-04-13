@@ -39,5 +39,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: et-udp # docker dns
+                      address: udp-delegate # docker dns
                       port_value: 161 # go server

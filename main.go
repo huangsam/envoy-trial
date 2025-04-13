@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	listenAddress   = "0.0.0.0:161" // listen for Envoy traffic
-	upstreamAddress = "et-sim:161"  // route Envoy traffic over to the SNMP simulator
-	maxUDPSize      = 65535         // max UDP packet size
+	listenAddress   = "0.0.0.0:161"        // listen for traffic
+	upstreamAddress = "snmp-simulator:161" // route traffic to the simulator
+	maxUDPSize      = 65535                // max UDP packet size
 )
 
 func main() {
