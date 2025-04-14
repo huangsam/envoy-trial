@@ -15,7 +15,8 @@ Feel free to inspect the [envoy config](./envoy.yaml) and [udp code](./main.go) 
 
 ```shell
 # In one terminal
-docker-compose up --build
+docker-compose up --build -d
+docker-compose logs -f udp-delegate
 
 # In another terminal (health check)
 echo "hello" | nc -u -w 1 127.0.0.1 10161
