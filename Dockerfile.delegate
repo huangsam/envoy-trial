@@ -1,13 +1,18 @@
-FROM golang:1.24-alpine
+FROM golang:1.24-alpine AS builder
 
-WORKDIR /app
-COPY . /app
+WORKDIR /code
+COPY . /code
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 
 RUN go mod download
-RUN go build -o main main.go
+RUN go build -o ./main main.go
+
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=builder /code/main /app/main
 
 EXPOSE 161/udp
 
