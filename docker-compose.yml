@@ -11,7 +11,7 @@ services:
       - udp-delegate
     networks:
       - shared
-  udp-delegate: # udp service name
+  udp-delegate: # service name
     image: trial-udp-delegate:latest
     build:
       context: .
@@ -20,7 +20,7 @@ services:
       - snmp-simulator
     networks:
       - shared
-  snmp-simulator: # simulator service name
+  snmp-simulator: # service name
     image: trial-snmp-simulator:latest
     build:
       context: .
