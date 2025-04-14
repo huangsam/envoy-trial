@@ -1,4 +1,3 @@
-name: envoy-trial
 services:
   udp-gateway: # envoy service name
     image: envoyproxy/envoy:v1.33-latest
